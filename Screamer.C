@@ -50,9 +50,6 @@ bool validateCode(char c[])
 // Sets a message to display on the bottom row for 5 seconds
 void setCurrentMessage(char message[])
 {
-  if(messageActive)
-    return;
-    
   lcd.clear();
   currentMessageStart = millis();
   messageActive = true;
