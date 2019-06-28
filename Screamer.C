@@ -23,19 +23,16 @@ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 const int alarmTriggerPin = 51, buzzerPin = 50;
 
-const int CODE_LENGTH = 5, CURRENT_MESSAGE_DURATION = 2000;
-bool armed = true, currTextFull = false, messageActive = false, passwordChangeInProgress = false, validateNewCode = false,
+const int CODE_LENGTH = 5, CURRENT_MESSAGE_DURATION = 3000;
+bool armed = false, currTextFull = false, messageActive = false, passwordChangeInProgress = false, validateNewCode = false,
      alarmSounding = false;
 char code[CODE_LENGTH], currText[CODE_LENGTH], newCode[CODE_LENGTH],
      currentMessage[16];
-int currentMessageStart = 0;
+unsigned long currentMessageStart = 0;
 
 // Checks if the text entered matches the current code
 bool validateCode(char c[])
-{
-  if(strlen(c) < CODE_LENGTH)
-    return false;
-    
+{   
   for(int i = 0; i < CODE_LENGTH; i++)
   {
     if(c[i] != code[i])
@@ -48,7 +45,7 @@ bool validateCode(char c[])
 }
 
 // Sets a message to display on the bottom row for 5 seconds
-void setCurrentMessage(char message[])
+void setCurrentMessage(const char message[])
 {
   lcd.clear();
   currentMessageStart = millis();
@@ -57,7 +54,7 @@ void setCurrentMessage(char message[])
   // Resets current message
   for(int i = 0; i < 16; i++)
     currentMessage[i] = '\0';
-  for(int i = 0; i < strlen(message) && i < 16; i++)
+  for(int i = 0; i < strlen(message); i++)
   {
     currentMessage[i] = message[i];
   }
@@ -86,6 +83,8 @@ void setup(){
     else
       code[i] = (char) EEPROM.read(i);
   }
+
+  Serial.println(code);
 }
   
 void loop(){
@@ -99,7 +98,7 @@ void loop(){
         if(currText[i] == '\0')
         {
           currText[i] = keyPressed;
-          currTextFull = i == CODE_LENGTH - 1;
+          currTextFull = (i == CODE_LENGTH - 1);
           break;
         }
       }
@@ -176,7 +175,10 @@ void loop(){
         else
         {
           // Let the user know that the code entered is invalid
+          Serial.println("Hello, invalid");
           setCurrentMessage("INVALID CODE");
+          Serial.println(millis() + ' ');
+          Serial.println(currentMessageStart + ' ');
         }
       }
 
