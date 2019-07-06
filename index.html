@@ -1,0 +1,71 @@
+<html>
+    <script type="text/javascript">
+      function toggleLed() {
+		sendPost("toggle");
+      	return;
+      }
+	  
+	  function setCode()
+	  {
+	  	var request = new XMLHttpRequest();
+		request.open("POST", "http://192.168.1.10:8080", true);
+		request.onload = function () {
+			var r = this.responseText;
+			console.log(r.split("\n")[r.split("\n").length - 1]);
+			document.getElementById("errMsg").innerHTML = r.split("\n")[r.split("\n").length - 1];
+		}
+	    request.setRequestHeader("Content-Type", "text/plain");
+		request.send(55 + " " + document.getElementById("code").value);
+      	return;
+	  }
+	  
+	  function soundAlarm()
+	  {
+		sendPost(45 + "");
+      	return;
+	  }
+	  
+	  function mute()
+	  {
+		sendPost(35 + "");
+      	return;
+	  }
+	  
+	  function arm()
+	  {
+		sendPost(65 + "");
+      	return;
+	  }
+	  
+	  function disarm()
+	  {
+		sendPost(75 + "");
+      	return;
+	  }
+	  
+	  function sendPost(data)
+	  {
+	  	var request = new XMLHttpRequest();
+		request.open("POST", "http://192.168.1.10:8080", true);
+	    request.setRequestHeader("Content-Type", "text/plain");
+		request.send(data);
+	  }
+    </script>
+	
+   <body>
+      <title>Alarm Manager</title>
+	  <h1>Alarm Manager</h1>
+	  <h2>
+      <button onClick="toggleLed()">Toggle LED</button><br>
+	  <button onClick="soundAlarm()">Sound Alarm</button>
+	  <button onClick="mute()">Mute</button>
+	  <button onClick="arm()">Arm</button>
+	  <button onClick="disarm()">Disarm</button>
+	  </h2>
+	  <h3>
+	  New Code: <input type="number" size="5" id="code"><br>
+	  <h4 style="color:red;" id="errMsg"></h4> 
+	  <button onClick="setCode()">Set Code</button>
+	  </h3>
+   </body>
+</html>
