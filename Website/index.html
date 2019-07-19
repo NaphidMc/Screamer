@@ -1,0 +1,43 @@
+<html>
+<script>
+	function loadControlPage()
+	{
+	  	var request = new XMLHttpRequest();
+		request.open("POST", "http://192.168.1.10:8080", false);
+		var authString = "user=" + document.getElementById("username").value + ";pass=" + document.getElementById("pass").value;
+	    request.setRequestHeader("Content-Type", "text/plain");
+		var tryLoad = false;
+		request.onload = function () {
+			var r = request.status;
+			console.log(r);
+			if(r == 200)
+				tryLoad = true;
+			else	
+				document.getElementById("err").innerHTML = "Invalid Login";
+		}
+		request.send(authString);
+		
+		if(tryLoad)
+		  location.assign("http://192.168.1.10:8080/viewDoors.html");
+		/*var result = fetch("http://192.168.1.10:8080/control.html?user=" +  + "&pass=" + ).then(
+		function(response)
+		{
+			if(response.status == 401)
+			{
+			}
+			else
+			{
+				console.log(response);
+			}
+		});*/
+	}	
+</script>
+
+<body>
+<h1>Login Page</h1>
+Username: <input id="username"><br><br>
+Password:  <input type="password" id="pass"><br><br>
+<button onClick="loadControlPage()">Login</button><br>
+<h2 style="color:red" id="err"></h2>
+</body>
+</html>
